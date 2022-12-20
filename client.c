@@ -6,65 +6,71 @@
 /*   By: adardour <adardour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 20:11:09 by adardour          #+#    #+#             */
-/*   Updated: 2022/12/19 21:15:54 by adardour         ###   ########.fr       */
+/*   Updated: 2022/12/20 21:08:27 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minitalk.h"
 
-static void	action(int sig)
-{
-	static int	received = 0;
+void static send_bytes(int pid,char *bytes){
+	int i;
 
-	if (sig == SIGUSR1)
-		++received;
-	else
-	{
-		ft_putnbr_fd(received, 1);
-		ft_putchar_fd('\n', 1);
-		exit(0);
+	int j = 1;
+	while(*bytes){
+		i = 7;
+
+		while(i >= 0){
+			if(*bytes == '0'){
+				kill(pid,SIGUSR1);
+			}		
+			else{
+				kill(pid,SIGUSR2);
+			}
+			j++;
+			i--;
+			usleep(100);
+			bytes++;
+		}
+		bytes++;
 	}
+	// 011000010110001101101000011100100110000101100110\0
 }
 
-static void	mt_kill(int pid, char *str)
-{
-	int		i;
-	char	c;
+static void get_bytes(int pid,char *pyload){
+	int i;
+	i = 7;
+	int j;
+	j = 0;
+	size_t  length_of_pyload = ft_strlen(pyload);
 
-	while (*str)
-	{
-		i = 8;
-		c = *str++;
-		while (i--)
-		{
-			if (c >> i & 1)
-				kill(pid, SIGUSR2);
-			else
-				kill(pid, SIGUSR1);
-			usleep(100);
+	char *bytes;
+	bytes = malloc((ft_strlen(pyload) * 8) + 1);
+	
+	while(*pyload != '\0'){
+		i = 7;
+		while(i >= 0){
+			if(*pyload & 1 << i){
+				bytes[j] = '1';
+			}
+			else{
+				bytes[j] = '0';
+			}
+			j++;
+			i--;
 		}
+		pyload++;
 	}
-	i = 8;
-	while (i--)
-	{
-		kill(pid, SIGUSR1);
-		usleep(100);
-	}
+	bytes[length_of_pyload * 8] = '\0';
+	send_bytes(pid,bytes);
 }
 
 int	main(int argc, char **argv)
-{
-	if (argc != 3 || !ft_strlen(argv[2]))
-		return (1);
-	ft_putstr_fd("Sent    : ", 1);
-	ft_putnbr_fd(ft_strlen(argv[2]), 1);
-	ft_putchar_fd('\n', 1);
-	ft_putstr_fd("Received: ", 1);
-	signal(SIGUSR1, action);
-	signal(SIGUSR2, action);
-	mt_kill(ft_atoi(argv[1]), argv[2]);
-	while (1)
-		pause();
+{	
+	printf("%d\n",getpid());
+	if(argc == 3){ 
+		get_bytes(ft_atoi(argv[1]), argv[2]);
+	}
+	// while(1)
+	// 	sleep(1);
 	return (0);
 }
