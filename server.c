@@ -5,38 +5,50 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adardour <adardour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/19 11:56:54 by adardour          #+#    #+#             */
-/*   Updated: 2022/12/20 21:54:42 by adardour         ###   ########.fr       */
+/*   Created: 2022/12/21 13:29:02 by adardour          #+#    #+#             */
+/*   Updated: 2022/12/21 19:19:25 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-// get The info about Client
-static void handler(int sig, siginfo_t *info, void *context)
-{    
-    unsigned char c;
-    c |= (sig == SIGUSR1);
-    printf("%d\n",c);
+static int sender;
+
+static void handler(int sign,siginfo_t *info,void *context){
+    static int i = 0; 
+    static unsigned int cc;
+    cc |= (sign == SIGUSR1);
+    sender = info->si_pid;
+    if(i == 7){
+        write(1,&cc,1);
+        i = 0;
+        cc = 0;
+    }
+    else{
+        cc <<= 1;
+        i++;
+    }
 }
 
-
-int main(int c,const char* argv[]){
-    
-
-    struct sigaction sa;   
-    int pid;
+int main(){
+    struct sigaction sigaction__ ;
+    static pid_t pid;
     pid = getpid();
-    ft_printf("\033[0;33mServer Starting at : \e[1m#%d\e[m\n",pid);
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_SIGINFO;
-    sa.sa_sigaction = &handler;
-
-    sigaction(SIGUSR1,&sa,0);
-    sigaction(SIGUSR2,&sa,0);
     
+    ft_puts("====================================\n");
+
+    ft_puts("   Server Starting at: #");
+    ft_putnbr_fd(pid,1);
+    ft_putchar('\n');
+    ft_puts("====================================\n");
+    ft_puts("       We Waiting you...\n\n");
+    sigemptyset(&sigaction__.sa_mask);
+    sigaction__.sa_flags = SA_SIGINFO;
+    sigaction__.sa_sigaction = &handler;
+
+    sigaction(SIGUSR1,&sigaction__,0);
+    sigaction(SIGUSR2,&sigaction__,0);
     while(1){
         sleep(1);
     }
-    return (0);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adardour <adardour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/19 11:52:49 by adardour          #+#    #+#             */
-/*   Updated: 2022/12/19 20:13:24 by adardour         ###   ########.fr       */
+/*   Created: 2022/12/21 13:28:14 by adardour          #+#    #+#             */
+/*   Updated: 2022/12/21 18:55:35 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 #include "ft_printf/libftprintf.h"
 #include "libft/libft.h"
-#include <signal.h>
+#include "signal.h"
 
 #endif
