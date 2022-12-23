@@ -6,23 +6,25 @@
 /*   By: adardour <adardour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 13:29:02 by adardour          #+#    #+#             */
-/*   Updated: 2022/12/22 20:39:00 by adardour         ###   ########.fr       */
+/*   Updated: 2022/12/23 21:24:36 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static int pid_client;
+
 
 static void handler(int sign,siginfo_t *info,void *context){
     
     static int i = 0; 
     static unsigned int cc;
+    static int STOP;
+    static int j;
     
     cc |= (sign == SIGUSR1);
     
-    if(i == 0x07){
-        write(1,&cc,1);
+    if(i == 7){
+        ft_putchar_fd(cc,1);
         i = 0;
         cc = 0;
     }
@@ -30,7 +32,8 @@ static void handler(int sign,siginfo_t *info,void *context){
         cc <<= 0x01;
         i++;
     }
-    pid_client = info->si_pid;
+    ft_putchar_fd('\n',1);
+    ft_putnbr_fd(cc,1);
 }
 
 static void display_info(pid_t pid){
@@ -57,7 +60,6 @@ static void display_info(pid_t pid){
     ft_puts("\033[0;37m");
     ft_putchar('\n');
     int i = 1;
-    ft_putstr_fd("Message Of Client: ",1);
 }
 
 int main(){
@@ -71,8 +73,10 @@ int main(){
     sigaction__.sa_sigaction = &handler;
     static int i = 0;
 
-    sigaction(SIGUSR1,&sigaction__,0);
-    sigaction(SIGUSR2,&sigaction__,0);
+    if(sigaction(SIGUSR1,&sigaction__,0) == -1)
+        ft_putstr_fd("❌ \033[0;31mPlease Some Errors At signal (SIGUSR1)\n",1);
+    if(sigaction(SIGUSR2,&sigaction__,0) == -1)
+       ft_putstr_fd("❌ \033[0;31mPlease Some Errors At signal (SIGUSR2)\n",1);
     while(1){
         pause();
     }
