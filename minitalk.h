@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 13:28:14 by adardour          #+#    #+#             */
-/*   Updated: 2022/12/23 12:32:07 by adardour         ###   ########.fr       */
+/*   Updated: 2022/12/24 20:42:58 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,8 @@
 #include "signal.h"
 
 #define ERROR "\033[0;31m"
+#define DISPLAY_ERROR1 "❌ Please Enter The Correct Arguments <\e[1mThe Argument must be equal 3>\n"
+#define DISPLAY_ERROR2 "❌ \033[0;31mPlease Enter The Correct (Proccess ID)PID\n"
+#define DISPLAY_ERROR3 "❌ \033[0;31mPlease Enter The Correct (Proccess ID)PID\n"
 
 #endif
