@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 12:57:43 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/20 17:19:50 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/29 18:33:05 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 		return (NULL);
 	}
 	i = 0;
-	str = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	str = (char *)malloc((ft_strlen(s) + 1));
 	if (str == NULL)
 	{
 		return (NULL);

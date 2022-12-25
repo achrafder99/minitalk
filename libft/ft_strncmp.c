@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 10:59:56 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/22 00:12:12 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/27 19:01:39 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		return (0);
 	while ((*str1 && *str2) && (*str1 == *str2) && (i < (n - 1)))
 	{
-		i++;
 		str1++;
 		str2++;
+		i++;
 	}
 	return (*str1 - *str2);
 }

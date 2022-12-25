@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 16:07:28 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/21 20:54:54 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/31 13:55:53 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,16 @@
 
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	t_list *ptr;
-	ptr = *lst;
-	while (ptr != NULL)
-		ptr = ptr->next;
-	ptr->next = new;
+	t_list	*last;
+
+	if (!new)
+		return ;
+	if (*lst == NULL)
+	{
+		*lst = new;
+		return ;
+	}
+	last = ft_lstlast(*lst);
+	last->next = new;
 	new->next = NULL;
 }

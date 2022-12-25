@@ -6,13 +6,13 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 11:18:35 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/22 21:10:04 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:04:01 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	*_(unsigned char *dst1, unsigned char *src1, size_t end)
+static void	*handle(unsigned char *dst1, unsigned char *src1, size_t end)
 {
 	size_t	i;
 
@@ -53,6 +53,6 @@ void	*ft_memmove(void *dest, const void *src, size_t len)
 		}
 	}
 	else
-		_(dst1, src1, end);
+		handle(dst1, src1, end);
 	return (dest);
 }

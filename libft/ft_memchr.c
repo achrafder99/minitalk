@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 22:54:34 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/20 17:43:14 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/31 14:55:03 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ void	*ft_memchr(const void *s, int c, size_t n)
 
 	str = (unsigned char *)s;
 	i = 0;
-	if (c == 0)
-		return ((void *)(s + ft_strlen(s)));
-	while (*str != '\0' && i < n)
+	while (i < n)
 	{
 		if (*str == (unsigned char)c)
-			return (str);
+			return ((unsigned char *)str);
 		str++;
 		i++;
 	}

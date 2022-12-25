@@ -6,12 +6,12 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:45:01 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/22 12:42:15 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/31 20:55:28 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_h
-# define LIBFT_h
+#ifndef LIBFT_H
+# define LIBFT_H
 
 # include <ctype.h>
 # include <stdio.h>
@@ -51,13 +51,22 @@ void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 size_t				ft_strlcat(char *dst, const char *src, size_t dstsize);
 char				**ft_split(char const *s, char c);
-typedef struct count
+typedef struct t_count
 {
 	int				countdigitis;
 	int				index;
 	int				strlenbuffer;
 	char			*str;
-} c;
+}					t_c;
+typedef struct t_rowandcolumn
+{
+	size_t			words;
+	int				i;
+	int				j;
+	char			**ptr;
+	int				nextblock;
+	int				length;
+}					t_rowsandcolumns;
 char				*ft_itoa(int n);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
@@ -72,6 +81,10 @@ int					ft_lstsize(t_list *lst);
 t_list				*ft_lstlast(t_list *lst);
 void				ft_lstadd_back(t_list **lst, t_list *new);
 void				ft_lstiter(t_list *lst, void (*f)(void *));
+t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
+						void (*del)(void *));
+void				ft_lstdelone(t_list *lst, void (*del)(void *));
+void				ft_lstclear(t_list **lst, void (*del)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 #endif

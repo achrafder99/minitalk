@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 21:34:32 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/21 15:32:30 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/31 14:54:11 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,34 @@
 
 static int	getrows(char const *s, char delimiter)
 {
-	char	*trim;
+	int		i;
 	int		count;
-	int		stop;
+	char	*trim;
 
-	count = 1;
+	if (s == NULL)
+		return (0);
+	i = 0;
+	count = 0;
 	trim = ft_strtrim(s, &delimiter);
-	while (*trim != '\0')
+	if (trim == NULL)
+		return (0);
+	while (trim[i] != '\0')
 	{
-		if (*trim == delimiter)
-			stop = 0;
-		else if (stop == 0)
-		{
-			stop = 1;
-			count++;
-		}
-		++trim;
+		while (*trim != '\0' && trim[i] == delimiter)
+			i++;
+		while (trim[i] != delimiter && trim[i] != '\0')
+			i++;
+		count++ ;
 	}
 	return (count);
 }
 
-static int	getcolumn(char *str, char delimiter, int index)
+static int	getcolumn(char const *str, char delimiter, int index)
 {
 	int	length;
 
+	if (str == NULL)
+		return (0);
 	length = 0;
 	while (str[index] != '\0')
 	{
@@ -49,78 +53,70 @@ static int	getcolumn(char *str, char delimiter, int index)
 	return (length);
 }
 
-void	fill(char *trim, char **ptr, int row, char c)
+static void	deallocate(char **ptr)
 {
 	int	i;
-	int	j;
-	int	jj;
 
 	i = 0;
-	j = 0;
-	jj = 0;
-	while (row > j)
+	while (ptr[i] != NULL)
 	{
-		while (trim[i] != c && trim[i] != '\0')
+		free(ptr[i]);
+		i++;
+	}
+	free(ptr);
+}
+
+static void	allocate(char *s, char c, char **split, int words)
+{
+	t_rowsandcolumns	rowandcolumn;
+
+	if (s == NULL || split == NULL)
+		return ;
+	rowandcolumn = (t_rowsandcolumns){.i = 0, .j = 0, .nextblock = 0};
+	while (words)
+	{
+		while (s[rowandcolumn.i] == c && s[rowandcolumn.i] != '\0')
+			rowandcolumn.i++;
+		rowandcolumn.j = 0;
+		while (s[rowandcolumn.i] != c && s[rowandcolumn.i] != '\0')
 		{
-			ptr[j][jj] = trim[i];
-			if (ptr[j] == NULL)
-				return ((void)(NULL));
-			i++;
-			jj++;
+			split[rowandcolumn.nextblock][rowandcolumn.j] = s[rowandcolumn.i];
+			if (split[rowandcolumn.nextblock] == NULL)
+				deallocate(split);
+			rowandcolumn.i++;
+			rowandcolumn.j++;
 		}
-		i += 1;
-		if (trim[i] != c)
-		{
-			ptr[j][jj] = '\0';
-			jj = 0;
-			j++;
-		}
+		split[rowandcolumn.nextblock][rowandcolumn.j] = '\0';
+		words--;
+		rowandcolumn.nextblock++;
 	}
 }
 
 char	**ft_split(char const *s, char c)
 {
-	size_t	words;
-	int		i;
-	int		j;
-	char	**ptr;
-	char	*trim;
+	t_rowsandcolumns	randc;
 
+	randc = (t_rowsandcolumns){.i = 0, .j = 0, .nextblock = 0, .length = 0};
 	if (s == NULL)
 		return (NULL);
-	words = getrows(s, c);
-	i = 0;
-	j = 0;
-	trim = ft_strtrim(s, &c);
-	ptr = (char **)malloc(sizeof(char *) * (words + 1));
-	if (ptr == NULL)
+	randc.words = getrows(s, c);
+	randc.ptr = malloc((sizeof(char *) * randc.words) + 1);
+	if (randc.ptr == NULL)
 		return (NULL);
-	while (trim[j] != '\0')
+	while (randc.words-- > 0)
 	{
-		while (words > 0)
+		while (s[randc.i] == c && s[randc.i] != '\0')
+			randc.i++;
+		while (s[randc.i] != c && s[randc.i] != '\0')
 		{
-			if (trim[j] == c)
-				break ;
-			ptr[i] = (char *)malloc(sizeof(char) * getcolumn(trim, c, j) + 1);
-			if (ptr[i] == NULL)
-			{
-				free(ptr);
-				return (NULL);
-			}
-			i++;
-			j += getcolumn(trim, c, j);
-			words--;
+			randc.length = getcolumn((char *)s, (char)c, randc.i);
+			randc.ptr[randc.nextblock] = malloc(randc.length + 1);
+			randc.i += getcolumn(s, c, randc.i);
+			randc.nextblock++;
 		}
-		j++;
+		if (randc.nextblock == getrows(s, c))
+			allocate((char *)s, c, randc.ptr, getrows(s, c));
 	}
-	if (ft_strlen(ft_strtrim(s, &c)) == 0)
-	{
-		words = 0;
-		ptr[words] = NULL;
-		return (ptr);
-	}
-	words = getrows(s, c);
-	fill(trim, ptr, words, c);
-	ptr[words] = NULL;
-	return (ptr);
+	randc.ptr[randc.nextblock] = NULL;
+	return (randc.ptr);
 }

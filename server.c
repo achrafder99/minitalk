@@ -5,49 +5,45 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adardour <adardour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/21 13:29:02 by adardour          #+#    #+#             */
-/*   Updated: 2022/12/24 20:46:51 by adardour         ###   ########.fr       */
+/*   Created: 2022/12/25 13:39:51 by adardour          #+#    #+#             */
+/*   Updated: 2022/12/25 22:12:43 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-// Explain Global Variables
-unsigned int	g_numbers[8];
-
-void	fillarray(void)
+static void	handler_event(int sign, siginfo_t *info, void *context)
 {
-	g_numbers[0] = 128;
-	g_numbers[1] = 64;
-	g_numbers[2] = 32;
-	g_numbers[3] = 16;
-	g_numbers[4] = 8;
-	g_numbers[5] = 4;
-	g_numbers[6] = 2;
-	g_numbers[7] = 1;
-}
-
-static void	handler(int sign, siginfo_t *info, void *context)
-{
-	static int				i;
 	static unsigned char	decimal;
+	static int				i;
+	static int				client_id;
 
-	fillarray();
-	if (sign == SIGUSR1)
-		decimal += g_numbers[i];
-	i++;
-	if (i == 8)
+	(void)context;
+	decimal |= (sign == SIGUSR1);
+	if ((client_id != info->si_pid) || !client_id)
+	{
+		client_id = info->si_pid;
+		i = 0;
+		decimal = 0;
+	}
+	if (i == 7)
 	{
 		ft_putchar_fd(decimal, 1);
 		i = 0;
 		decimal = 0;
+		if (kill(client_id, SIGUSR1) == -1)
+			ft_putstr_fd(ERROR, 1);
+	}
+	else
+	{
+		decimal <<= 1;
+		i++;
 	}
 }
 
 static void	display_info(pid_t pid)
 {
 	time_t	t;
-	int		i;
 
 	time(&t);
 	ft_puts("\033[0;33m====================================\n");
@@ -67,27 +63,22 @@ static void	display_info(pid_t pid)
 	ft_putstr_fd("          We Waiting You ... 🕛\n", 1);
 	ft_puts("\033[0;37m");
 	ft_putchar('\n');
-	i = 1;
 }
 
 int	main(void)
 {
-	struct sigaction	sigaction__;
-	static pid_t		pid;
-	static int			i;
+	struct sigaction	sa;
 
-	pid = getpid();
-	display_info(pid);
-	sigemptyset(&sigaction__.sa_mask);
-	sigaction__.sa_flags = SA_SIGINFO;
-	sigaction__.sa_sigaction = &handler;
-	i = 0;
+	display_info(getpid());
+	sigemptyset(&sa.sa_mask);
+	sa.sa_sigaction = &handler_event;
+	sa.sa_flags = SA_SIGINFO;
+	ft_putchar_fd('\n', 1);
+	if (sigaction(SIGUSR1, &sa, 0) == -1)
+		ft_puts("❌ \033[0;31mPlease Some Errors At signal (SIGUSR1)\n");
+	if (sigaction(SIGUSR2, &sa, 0) == -1)
+		ft_puts("❌ \033[0;31mPlease Some Errors At signal (SIGUSR2)\n");
 	while (1)
-	{
-		if (sigaction(SIGUSR1, &sigaction__, 0) == -1)
-			ft_puts("❌ \033[0;31mPlease Some Errors At signal (SIGUSR1)\n");
-		if (sigaction(SIGUSR2, &sigaction__, 0) == -1)
-			ft_puts("❌ \033[0;31mPlease Some Errors At signal (SIGUSR2)\n");
 		pause();
-	}
+	return (EXIT_SUCCESS);
 }

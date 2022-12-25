@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 22:43:46 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/22 21:28:00 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/24 01:41:14 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	ft_putstr_fd(char *s, int fd)
 {
 	if (s == NULL)
-	{
-		return ((void)NULL);
-	}
+		return ;
 	while (*s != '\0')
 	{
 		write(fd, s, 1);

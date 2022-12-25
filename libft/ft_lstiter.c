@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:14:33 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/21 23:59:41 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/31 20:36:04 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
+	if (lst == NULL)
+		return ;
 	while (lst != NULL)
 	{
 		f(lst->content);

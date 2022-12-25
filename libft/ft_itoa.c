@@ -6,7 +6,7 @@
 /*   By: adardour <adardour@student.1337.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 09:24:49 by adardour          #+#    #+#             */
-/*   Updated: 2022/10/22 21:23:00 by adardour         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:10:54 by adardour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	countdigitis(int n)
 {
-	c	count;
+	t_c	count;
 
 	count.countdigitis = 0;
 	if (n < 0)
@@ -27,12 +27,11 @@ static int	countdigitis(int n)
 	return (count.countdigitis);
 }
 
-static char	*itoa_(int number, char *str, char *buffer)
+static char	*resultstring(int number, char *str, char *buffer)
 {
 	int	i;
 	int	length;
 
-	i = 0;
 	i = 0;
 	while (number > 0)
 	{
@@ -70,14 +69,14 @@ char	*ft_itoa(int n)
 		return (buffer);
 	}
 	numberofdigitis = countdigitis(n);
-	str = (char *)malloc((numberofdigitis * sizeof(char)) + 1);
-	buffer = ft_calloc(numberofdigitis, sizeof(char));
-	if (str == NULL)
+	str = (char *)malloc(numberofdigitis * sizeof(char) + 1);
+	buffer = ft_calloc(numberofdigitis + 1, sizeof(char));
+	if (str == NULL || buffer == NULL)
 		return (NULL);
 	else if (n < 0)
 	{
 		buffer[0] = '-';
 		n *= -1;
 	}
-	return (itoa_(n, str, buffer));
+	return (resultstring(n, str, buffer));
 }
